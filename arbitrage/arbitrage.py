@@ -31,10 +31,8 @@ class ArbitrerCLI:
             self.list_markets()
         if "compare-depths" in args.command:
             self.compare_depths(args)
-      
         if "generate-config" in args.command:
             self.generate_sample_config()
-
 
     def compare_depths(self, args):
         if not args.exchanges:
