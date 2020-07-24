@@ -19,11 +19,14 @@ class Market(object):
         self.fc.update()
 
     def get_depth(self):
+        """
+        @todo Use websocket and reduce the update_rate to realtime, only fall back to RESTful when wss is broken.
+        """
         timediff = time.time() - self.depth_updated
         if timediff > self.update_rate:
             self.ask_update_depth()
         timediff = time.time() - self.depth_updated
-        if timediff > config.market_expiration_time:
+        if timediff > config.market_expiration_time: # depth data not updated properly. why? FIXME
             logging.warn("Market: %s order book is expired" % self.name)
             self.depth = {"asks": [{"price": 0, "amount": 0}], "bids": [{"price": 0, "amount": 0}]}
         return self.depth
