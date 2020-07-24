@@ -1,6 +1,6 @@
 markets = [
-    "OKCoinUSDT",
-    "BinanceUSD",
+    #"OKCoinUSDT",
+    #"BinanceUSD",
     "HuobiproUSDT",
     "WBFExUSDT",
 ]

@@ -23,9 +23,9 @@ class Arbitrer(object):
         self.market_names = markets
         for market_name in markets:
             try:
-                exec("import arbitrage.public_markets." + market_name.lower())
+                exec("import arbitrage.public_markets.eth." + market_name.lower())
                 market = eval(
-                    "arbitrage.public_markets." + market_name.lower() + "." + market_name + "()"
+                    "arbitrage.public_markets.eth." + market_name.lower() + "." + market_name + "()"
                 )
                 self.markets.append(market)
             except (ImportError, AttributeError) as e:
