@@ -50,6 +50,16 @@ class Arbitrer(object):
                 )
 
     def get_profit_for(self, mi, mj, kask, kbid):
+        """
+        @brief Core of arbitrage algorithm.
+
+        @param mi (int): ith level on kask of market 1
+        @param mj (int): jth level on kbid of market 2
+        @param kask (list): depths of market 1
+        @param kbid (list): depths of market 2
+
+        @return profit, sell_amount, buy_price and sell_price
+        """
         if self.depths[kask]["asks"][mi]["price"] >= self.depths[kbid]["bids"][mj]["price"]:
             return 0, 0, 0, 0
 
@@ -72,7 +82,7 @@ class Arbitrer(object):
             if w_buyprice == 0:
                 w_buyprice = price
             else:
-                w_buyprice = (w_buyprice * (buy_total - amount) + price * amount) / buy_total
+                w_buyprice = (w_buyprice * (buy_total - amount) + price * amount) / buy_total # average buy price
 
         sell_total = 0
         w_sellprice = 0
@@ -87,12 +97,15 @@ class Arbitrer(object):
             if w_sellprice == 0 or sell_total == 0:
                 w_sellprice = price
             else:
-                w_sellprice = (w_sellprice * (sell_total - amount) + price * amount) / sell_total
+                w_sellprice = (w_sellprice * (sell_total - amount) + price * amount) / sell_total # average sell price
 
         profit = sell_total * w_sellprice - buy_total * w_buyprice
         return profit, sell_total, w_buyprice, w_sellprice
 
     def get_max_depth(self, kask, kbid):
+        """
+        @brief Get the index of crossing of bid/ask
+        """
         i = 0
         if len(self.depths[kbid]["bids"]) != 0 and len(self.depths[kask]["asks"]) != 0:
             while self.depths[kask]["asks"][i]["price"] < self.depths[kbid]["bids"][0]["price"]:
@@ -108,6 +121,14 @@ class Arbitrer(object):
         return i, j
 
     def arbitrage_depth_opportunity(self, kask, kbid):
+        """
+        @brief Cross checking
+
+        @param kask (list): ask prices of market 1
+        @param kbid (list): bid prices of market 2, which is different than the market 1
+
+        @return possible profits.
+        """
         maxi, maxj = self.get_max_depth(kask, kbid)
         best_profit = 0
         best_i, best_j = (0, 0)
